@@ -1,5 +1,6 @@
 package com.example.nestorespana.googlemaps;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -12,8 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,LocationListener{
     private FragmentManager fragmentManager;
 
     @Override
@@ -78,11 +83,35 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.container, new MapsFragment(),"Maps Fragment ");
+            transaction.commitAllowingStateLoss();
+
+        }else if (id == R.id.nav_places) {
+            GoogleMapOptions options = new GoogleMapOptions();
+            options.mapType(GoogleMap.MAP_TYPE_SATELLITE)
+                    .compassEnabled(false)
+                    .rotateGesturesEnabled(false)
+                    .tiltGesturesEnabled(false);
+
+
+
+
+           /* Uri gmmIntentUri = Uri.parse("geo:0,0?q=restaurants");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);*/
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
     }
 }
